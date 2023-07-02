@@ -16,6 +16,17 @@ def readOff(off_file, logger = None):
         logger.info(f"n_vertices = {vertices.shape[0]},  n_faces = {faces.shape[0]}")
     return vertices, faces
 
+def readOBJ(obj_file, logger = None):
+    # Read an obj file
+    if obj_file[-4:] != ".obj":
+        logger.error(f"{obj_file} is not an obj file.")
+        exit()
+    vertices, _, _, faces, _, _ = igl.read_obj(obj_file)
+    if logger:
+        logger.info(f"read {obj_file} successfully!")
+        logger.info(f"n_vertices = {vertices.shape[0]},  n_faces = {faces.shape[0]}")
+    return vertices, faces
+
 def saveXYZ(xyz_file, points_ls, logger = None):
     # Save points into a xyz file
     if xyz_file[-4:] != ".xyz":
