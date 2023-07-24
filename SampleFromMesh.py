@@ -37,6 +37,14 @@ def saveXYZ(xyz_file, points_ls, logger = None):
     if logger:
         logger.info(f"points are saved to {xyz_file}")
 
+def saveMesh(file_path, vertices, faces, logger = None):
+    # Save triangle mesh, supported (obj, off, stl, wrl, ply, mesh)
+    success = igl.write_triangle_mesh(file_path, vertices, faces)
+    if success:
+        logger.info(f"save mesh to {file_path} successfully!")
+    else:
+        logger.error(f"failed to save {file_path}")
+
 def faceArea(vertices, faces):
     # Compute the area of each face
     dbl_area = igl.doublearea(vertices, faces)
