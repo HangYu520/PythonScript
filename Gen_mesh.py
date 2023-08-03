@@ -18,13 +18,17 @@ def readPointCloud(pcd_file, logger=None):
 
     return [x,y,z]
 
-def boundingbox(x,y,xm_offset=0,xM_offset=0,ym_offset=0,yM_offset=0):
-    # find the 2D bounding box of the points {(x,y)}
-    xmin, xmax = min(x) + xm_offset, max(x) + xM_offset
-    ymin, ymax = min(y) + ym_offset, max(y) + yM_offset
-    
+def boundingbox(x,y,x_Length=250,y_Length=100):
+    # find the 2D bounding box of the points {(x,y)}, required length: x_Length * y_Length
+    xmin, xmax = min(x), max(x)
+    ymin, ymax = min(y), max(y)
+    x_offset = (x_Length - xmax + xmin) / 2
+    y_offset = y_Length - ymax + ymin - 1
     # the four corner of the bounding box
-    corners = [(xmin,ymin), (xmax,ymin), (xmax,ymax), (xmin,ymax)]
+    corners = [(xmin-x_offset,ymin-1), 
+               (xmax+x_offset,ymin-1), 
+               (xmax+x_offset,ymax+y_offset), 
+               (xmin-x_offset,ymax+y_offset)]
 
     return corners
 
@@ -69,7 +73,7 @@ def addPolygon(x,y):
 def addShape(x,y):
     # x: the vector/list of x coord, y: the vector/list of y coord
 
-    [P1,P2,P3,P4] = boundingbox(x,y,xm_offset=-20,xM_offset=20,ym_offset=-1,yM_offset=10) # four corners of bounding box
+    [P1,P2,P3,P4] = boundingbox(x,y) # four corners of bounding box
     wire = addPolygon([P1[0],P2[0],P3[0],P4[0]],[P1[1],P2[1],P3[1],P4[1]])
     hole = addPolygon(x,y) # inner hole
 
